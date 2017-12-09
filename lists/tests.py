@@ -89,3 +89,15 @@ class NewListTest(TestCase):
 		)
 		
 		self.assertRedirects(response, f'/lists/{correct_list.id}/')
+		
+class NewItemTest(TestCase):
+	def test_can_save_a_POST_request_to_an_existing_list(self):
+		correct_list=List.objects.create()
+		other_list = List.objects.create()
+		
+		response = self.client.post(
+			f'/lists/{correct_list.id}/add_item',
+			data = {'item_text': 'A new item for an existing list'}
+		)
+		
+		self.assertRedirects(response, f'/lists/{correct_list.id}/')

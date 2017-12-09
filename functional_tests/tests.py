@@ -14,7 +14,7 @@ class NewVisitorTest(LiveServerTestCase):
 		self.browser.quit()
 		
 	def wait_for_row_in_list_table(self, row_text):
-		start_tme=time.time()
+		start_time=time.time()
 		while True:
 			try:
 				table = self.browser.find_element_by_id('id_list_table')
