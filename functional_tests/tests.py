@@ -25,7 +25,29 @@ class NewVisitorTest(LiveServerTestCase):
 				if time.time() - start_time > MAX_WAIT:
 					raise e
 				time.sleep(0.5)
-		
+	
+	def test_layout_and_styling(self):
+		self.browser.get(self.live_server_url)
+		self.browser.set_window_size(1024, 768)
+
+		inputbox=self.browser.find_element_by_id('id_new_item')
+		self.assertAlmostEqual(
+			inputbox.location['x']+ inputbox.size['width']/2,
+			512,
+			delta=20
+			)
+		# She starts a new list and sees the input is nicely
+		# centered there too
+		inputbox.send_keys('testing')
+		inputbox.send_keys(Keys.ENTER)
+		self.wait_for_row_in_list_table('1: testing')
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertAlmostEqual(
+			inputbox.location['x'] + inputbox.size['width'] / 2,
+			512,
+			delta=10
+		)
+	
 	def test_can_start_a_list_and_retreive_it_later(self):
 		#Edith has heard about a cool new online to-do app. She goes to check out the homepage
 		self.browser.get(self.live_server_url)
@@ -59,6 +81,7 @@ class NewVisitorTest(LiveServerTestCase):
 		# The page updates again, and now shows both items on her list
 		self.wait_for_row_in_list_table('1: Buy peacock feathers')
 		self.wait_for_row_in_list_table('2: Use peacock feathers to make a fly')
+		
 		
 		#Satisfied she goes back to sleep
 		
@@ -114,4 +137,3 @@ class NewVisitorTest(LiveServerTestCase):
 		self.assertIn('Buy milk', page_text)
 
 		# Satisfied, they both go back to sleep
-		self.fail("Finish the damn test!")
